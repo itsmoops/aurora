@@ -32,12 +32,15 @@ function createHiDPICanvas(w, h, canvas, ratio) {
 //
 
 function init() {
-  renderScene();
+  renderScene(false);
 }
 
-function renderScene() {
+function renderScene(resize) {
   createHiDPICanvas(window.innerWidth, window.innerHeight, canvas);
   drawBackground();
+  if (!resize) {
+      drawStars();
+  }
   drawTitle();
   drawMountains();
   drawScenery();
@@ -61,52 +64,74 @@ function drawTitle() {
   updateStage(text);
 }
 
+var mountainTop = 1100;
 function drawMountains() {
   var mountain = new createjs.Shape();
   mountain.graphics.beginStroke("#383838");
   mountain.graphics.beginFill("#383838").lineTo(10, 50).lineTo(200,400).lineTo(-200,400);
   mountain.x = canvas.width - (canvas.width/4);
-  mountain.y = 1000;
+  mountain.y = mountainTop;
   updateStage(mountain);
 
   var mountain = new createjs.Shape();
   mountain.graphics.beginStroke("#383838");
   mountain.graphics.beginFill("#383838").lineTo(10, 70).lineTo(300,400).lineTo(-300,400);
   mountain.x = canvas.width - (canvas.width/6.5);
-  mountain.y = 1000;
+  mountain.y = mountainTop;
   updateStage(mountain);
 
   var mountain = new createjs.Shape();
   mountain.graphics.beginStroke("#656363");
   mountain.graphics.beginFill("#656363").lineTo(10, 40).lineTo(200,400).lineTo(-200,400);
   mountain.x = canvas.width - (canvas.width/3.5);
-  mountain.y = 1000;
+  mountain.y = mountainTop;
   updateStage(mountain);
 
   var mountain = new createjs.Shape();
   mountain.graphics.beginStroke("#a1a1a1");
   mountain.graphics.beginFill("#a1a1a1").lineTo(10, 30).lineTo(250,400).lineTo(-250,400);
-  mountain.x = canvas.width - (canvas.width/5.5);
-  mountain.y = 1000;
+  mountain.x = canvas.width - (canvas.width/5.75);
+  mountain.y = mountainTop;
   updateStage(mountain);
 
   var mountain = new createjs.Shape();
   mountain.graphics.beginStroke("#d0cdcd");
   mountain.graphics.beginFill("#d0cdcd").lineTo(0, 0).lineTo(200,400).lineTo(-200,400);
   mountain.x = canvas.width - (canvas.width/5);
-  mountain.y = 1000;
+  mountain.y = mountainTop;
   updateStage(mountain);
 }
 
 function drawScenery() {
   var background = new createjs.Graphics();
-  background.beginFill("#383838").drawRect(0,1400,canvas.width,canvas.height);
+  background.beginFill("#282727").drawRect(0,1500,canvas.width,canvas.height);
   var shape = new createjs.Shape(background);
   updateStage(shape);
 }
 
+function drawStars() {
+  var starColors = ["#d0cdcd", "#a1a1a1", "#858585", "#e6e6e6", "#e9e8e8"];
+  var randomColor;
+  var randomRadius;
+  var randomX;
+  var randomY;
+  for (i = 0; i < 300; i++) {
+    randomColor = starColors[Math.floor(Math.random() * starColors.length)];
+    randomRadius = Math.floor(Math.random() * (4 - 1 + 1)) + 1;
+    randomX = Math.floor(Math.random() * (canvas.width - 1 + 1)) + 1;
+    randomY = Math.floor(Math.random() * (1500 - 1 + 1)) + 1;
+    var star = new createjs.Graphics();
+    star.setStrokeStyle(1);
+    star.beginStroke(randomColor);
+    star.beginFill(randomColor);
+    star.drawCircle(randomX,randomY,randomRadius);
+    var shape = new createjs.Shape(star);
+    updateStage(shape);
+  }
+}
+
 function resize() {
-  renderScene();
+  renderScene(true);
 }
 
 function updateStage(child) {
