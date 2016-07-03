@@ -4,6 +4,7 @@ var scene, camera, renderer;
 
 var canvas = document.getElementById("canvas");
 var stage = new createjs.Stage("canvas");
+stage.enableMouseOver(10);
 
 var initialWidth = window.innerWidth;
 var initialHeight = window.innerHeight;
@@ -12,6 +13,7 @@ var colorPalette = {
   fontColor1: "#d0cdcd",
   sky: ["#64c3bc", "#281c2f"],
   skyOld: ["#202020", "#333333", "#339575", "#64c3bc", "#382942", "#281c2f"],
+  aurora: ["#55fec7", "#64c3bc"],
   stars: ["#d0cdcd", "#a1a1a1", "#656363", "#e6e6e6", "#e9e8e8"],
   water: ["#295969", "#339575"],
   landDark: "#282727",
@@ -50,18 +52,37 @@ function init() {
 function renderScene(resize) {
   createHiDPICanvas(window.innerWidth, window.innerHeight, canvas);
   drawBackground();
-  // if (!resize) {
+  if (!resize) {
     drawStars();
-  // }
+  }
   drawTitle();
   // drawVolcano();
   drawMountains();
   // drawLighthouse();
   drawScenery();
   drawWater();
-  drawBoat();
-  drawBuoy();
-  drawIceberg();
+  // drawBoat();
+  // drawBuoy();
+  // drawIceberg();
+  drawAurora();
+}
+
+function drawAurora() {
+  var aurora = new createjs.Shape();
+  aurora.graphics.setStrokeStyle(6, "round");
+  aurora.graphics.beginStroke(colorPalette.aurora[0]);
+  aurora.graphics.beginFill(colorPalette.aurora[0]).lineTo(200,800).lineTo(1000,200).lineTo(1000, 225).lineTo(200,800).closePath();
+  aurora.graphics.endStroke();
+
+  aurora.cursor = "pointer";
+
+  var blurFilter = new createjs.BlurFilter(5, 25, 1);
+
+  aurora.filters = [blurFilter];
+  var bounds = blurFilter.getBounds();
+  aurora.cache(-50+bounds.x, -50+bounds.y, 100+bounds.width, 100+bounds.height);
+  aurora._applyFilters();
+  updateStage(aurora);
 }
 
 function drawBackground() {
@@ -100,6 +121,7 @@ function drawMountains() {
   .lineTo(canvas.width, 1500)
   .lineTo(canvas.width, 1500)
   .lineTo(0, 1500);
+  mountainRange1.graphics.endStroke();
   updateStage(mountainRange1);
   // Mountain ranges
   var mountainRange2 = new createjs.Shape();
@@ -130,6 +152,7 @@ function drawMountains() {
   .lineTo(canvas.width, 1300)
   .lineTo(canvas.width, 1500)
   .lineTo(0, 1500);
+  mountainRange2.graphics.endStroke();
   updateStage(mountainRange2);
 
   // Left
@@ -140,30 +163,35 @@ function drawMountains() {
   mountain1.graphics.beginStroke(colorPalette.mountains[0]);
   mountain1.graphics.beginFill(colorPalette.mountains[0]).lineTo(0, 1500).lineTo(175,1250).lineTo(200,1200).lineTo(450,1500);
   mountain1.x = canvas.width - (canvas.width/2.75);
+  mountain1.graphics.endStroke();
   updateStage(mountain1);
 
   var mountain2 = new createjs.Shape();
   mountain2.graphics.beginStroke(colorPalette.mountains[0]);
   mountain2.graphics.beginFill(colorPalette.mountains[0]).lineTo(0, 1500).lineTo(350,1125).lineTo(600,1500);
   mountain2.x = canvas.width - (canvas.width/4.25);
+  mountain2.graphics.endStroke();
   updateStage(mountain2);
 
   var mountain3 = new createjs.Shape();
   mountain3.graphics.beginStroke(colorPalette.mountains[1]);
   mountain3.graphics.beginFill(colorPalette.mountains[1]).lineTo(0, 1500).lineTo(150,1275).lineTo(250,1200).lineTo(400,1500);
   mountain3.x = canvas.width - (canvas.width/3);
+  mountain3.graphics.endStroke();
   updateStage(mountain3);
 
   var mountain4 = new createjs.Shape();
   mountain4.graphics.beginStroke(colorPalette.mountains[2]);
   mountain4.graphics.beginFill(colorPalette.mountains[2]).lineTo(0, 1500).lineTo(200,1200).lineTo(350, 1300).lineTo(500,1500);
   mountain4.x = canvas.width - (canvas.width/4);
+  mountain4.graphics.endStroke();
   updateStage(mountain4);
 
   var mountain5 = new createjs.Shape();
   mountain5.graphics.beginStroke(colorPalette.mountains[3]);
   mountain5.graphics.beginFill(colorPalette.mountains[3]).lineTo(0, 1500).lineTo(200,1150).lineTo(450,1500);
   mountain5.x = canvas.width - (canvas.width/3.5);
+  mountain5.graphics.endStroke();
   updateStage(mountain5);
 }
 
@@ -172,7 +200,8 @@ function drawWater() {
   var water = new createjs.Shape();
   water.graphics.beginStroke(colorPalette.water[0])
   water.graphics.beginLinearGradientFill(colorPalette.water, ratios, 0, 1900, 0, 120)
-                .lineTo(0,1600).arcTo(1100,1600,1250,1700,700).lineTo(1450,canvas.height).lineTo(0,canvas.height);;
+                .lineTo(0,1600).arcTo(1100,1600,1250,1700,700).lineTo(1450,canvas.height).lineTo(0,canvas.height);
+  water.graphics.endStroke();
   updateStage(water);
 
   var randomColor;
@@ -190,6 +219,7 @@ function drawWater() {
     star.beginStroke(randomColor);
     star.beginFill(randomColor);
     star.drawCircle(randomX,randomY,randomRadius);
+    star.endStroke();
     var shape = new createjs.Shape(star);
     updateStage(shape);
   }
@@ -199,6 +229,7 @@ function drawScenery() {
   var background = new createjs.Graphics();
   background.beginStroke(colorPalette.landSnowy)
   background.beginFill(colorPalette.landSnowy).drawRect(0,1500,canvas.width,canvas.height);
+  background.endStroke();
   var shape = new createjs.Shape(background);
   updateStage(shape);
 }
@@ -219,6 +250,7 @@ function drawStars() {
     star.beginStroke(randomColor);
     star.beginFill(randomColor);
     star.drawCircle(randomX,randomY,randomRadius);
+    star.endStroke();
     var shape = new createjs.Shape(star);
     updateStage(shape);
   }
