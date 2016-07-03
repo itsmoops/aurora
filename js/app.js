@@ -9,17 +9,20 @@ stage.enableMouseOver(10);
 var initialWidth = window.innerWidth;
 var initialHeight = window.innerHeight;
 
+var mountainTop = 1100;
+
 var colorPalette = {
   fontColor1: "#d0cdcd",
   sky: ["#64c3bc", "#281c2f"],
   skyOld: ["#202020", "#333333", "#339575", "#64c3bc", "#382942", "#281c2f"],
-  aurora: ["#55fec7", "#64c3bc"],
+  aurora: ["#c2fae8", "#46d9a9"],
   stars: ["#d0cdcd", "#a1a1a1", "#656363", "#e6e6e6", "#e9e8e8"],
   water: ["#295969", "#339575"],
   landDark: "#282727",
   landSnowy: "#a1a1a1",
   mountainRange: ["#282727", "#383838"],
-  mountains: ["#494848", "#656363", "#a1a1a1", "#e6e6e6"]
+  mountains: ["#494848", "#656363", "#a1a1a1", "#e6e6e6"],
+  icebergs: ["#494848", "#656363", "#83999f", "#e6e6e6"]
 }
 
 // Needed to upscale objects so they look sharp
@@ -57,32 +60,59 @@ function renderScene(resize) {
   }
   drawTitle();
   // drawVolcano();
+  drawAurora();
   drawMountains();
+
   // drawLighthouse();
   drawScenery();
   drawWater();
   // drawBoat();
   // drawBuoy();
-  // drawIceberg();
-  drawAurora();
+  drawIcebergs();
+  // testing();
+}
+
+function testing() {
+  var shape = new createjs.Shape().set({x:100,y:100});
+ shape.graphics.beginFill("#ff0000").drawCircle(0,0,50);
+
+ var blurFilter = new createjs.BlurFilter(5, 50, 1);
+ shape.filters = [blurFilter];
+ var bounds = blurFilter.getBounds();
+
+ shape.cache(-50+bounds.x, -50+bounds.y, 100+bounds.width, 100+bounds.height);
+ updateStage(shape);
 }
 
 function drawAurora() {
   var aurora = new createjs.Shape();
-  aurora.graphics.setStrokeStyle(6, "round");
-  aurora.graphics.beginStroke(colorPalette.aurora[0]);
-  aurora.graphics.beginFill(colorPalette.aurora[0]).lineTo(200,800).lineTo(1000,200).lineTo(1000, 225).lineTo(200,800).closePath();
-  aurora.graphics.endStroke();
-
+  aurora.graphics.setStrokeStyle(10, "round")
+  .beginStroke(colorPalette.aurora[0])
+  .beginFill(colorPalette.aurora[0])
+  .moveTo(200,400)
+  .lineTo(1500,400);
   aurora.cursor = "pointer";
 
-  var blurFilter = new createjs.BlurFilter(5, 25, 1);
-
+  var blurFilter = new createjs.BlurFilter(50, 50, 1);
   aurora.filters = [blurFilter];
   var bounds = blurFilter.getBounds();
   aurora.cache(-50+bounds.x, -50+bounds.y, 100+bounds.width, 100+bounds.height);
-  aurora._applyFilters();
-  updateStage(aurora);
+
+  updateStage(aurora); // Utility funciton that calls addChild and update on stage
+
+  // shape.shadow = new createjs.Shadow(colorPalette.shape[1],0,0,200);
+  // var ratios = [0, 1];
+  // var aurora = new createjs.Shape();
+  // aurora.graphics.beginLinearGradientFill([colorPalette.sky[1], colorPalette.aurora[1]], ratios, 0, 0, 500, 500).drawRect(200,400,1300,mountainTop);
+  // aurora.alpha = 0.3;
+  // aurora.graphics.endStroke();
+  //
+  // var blurFilter = new createjs.BlurFilter(50, 50, 1);
+  // aurora.filters = [blurFilter];
+  // var bounds = blurFilter.getBounds();
+  // aurora.cache(-50+bounds.x, -50+bounds.y, 100+bounds.width, 100+bounds.height);
+  //
+  // updateStage(aurora);
 }
 
 function drawBackground() {
@@ -101,7 +131,6 @@ function drawTitle() {
   updateStage(text);
 }
 
-var mountainTop = 1100;
 function drawMountains() {
   var mountainRange1 = new createjs.Shape();
   mountainRange1.graphics.beginStroke(colorPalette.mountainRange[0]);
@@ -254,6 +283,26 @@ function drawStars() {
     var shape = new createjs.Shape(star);
     updateStage(shape);
   }
+}
+
+function drawIcebergs() {
+  var iceberg1 = new createjs.Shape();
+  iceberg1.graphics.beginStroke(colorPalette.icebergs[2]);
+  iceberg1.graphics.beginFill(colorPalette.icebergs[2]).moveTo(200,1795).lineTo(300, 1670).lineTo(350, 1650).lineTo(400, 1670).lineTo(475, 1750).lineTo(425, 1785).lineTo(200, 1795);
+  iceberg1.graphics.endStroke();
+  updateStage(iceberg1);
+
+  var iceberg2 = new createjs.Shape();
+  iceberg2.graphics.beginStroke(colorPalette.icebergs[3]);
+  iceberg2.graphics.beginFill(colorPalette.icebergs[3]).moveTo(120,1800).lineTo(170, 1750).lineTo(200, 1720).lineTo(250, 1700).lineTo(300,1700).lineTo(400,1800).lineTo(300, 1820).lineTo(150, 1810);
+  iceberg2.graphics.endStroke();
+  updateStage(iceberg2);
+
+  // var iceberg2 = new createjs.Shape();
+  // iceberg2.graphics.beginStroke(colorPalette.icebergs[3]);
+  // iceberg2.graphics.beginFill(colorPalette.icebergs[3]).moveTo(120,1800).arc(50, 50, 50, 0, Math.PI, true).closePath();
+  // iceberg2.graphics.endStroke();
+  // updateStage(iceberg2);
 }
 
 function resize() {
