@@ -1,4 +1,4 @@
-#AURORA
+# AURORA
 
 Experimenting with canvas, easel.js and tone.js
 
